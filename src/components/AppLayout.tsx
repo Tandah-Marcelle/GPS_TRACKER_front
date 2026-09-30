@@ -3,15 +3,16 @@ import { NavLink as RouterNavLink, useNavigate } from 'react-router-dom';
 import {
   AppShell,
   Avatar,
+  Badge,
   Burger,
   Button,
+  Divider,
   Group,
   Menu,
   NavLink,
   ScrollArea,
   Stack,
   Text,
-  ThemeIcon,
   UnstyledButton,
 } from '@mantine/core';
 import {
@@ -50,7 +51,7 @@ const NAV_ITEMS: NavItem[] = [
     roles: ['STOCK_MANAGER'],
   },
   {
-    label: 'My interventions',
+    label: 'My Interventions',
     to: '/my-interventions',
     icon: IconTool,
     roles: ['TECHNICIAN'],
@@ -71,51 +72,64 @@ export function AppLayout({ children }: { children: ReactNode }) {
 
   return (
     <AppShell
-      header={{ height: 60 }}
+      header={{ height: 64 }}
       navbar={{ width: 240, breakpoint: 'sm', collapsed: { mobile: !opened } }}
-      padding="md"
+      padding="lg"
     >
-      <AppShell.Header>
+      {/* ── Header ─────────────────────────────────── */}
+      <AppShell.Header
+        style={{
+          background: 'var(--mantine-color-dark-7)',
+          borderBottom: '1px solid var(--mantine-color-dark-5)',
+        }}
+      >
         <Group h="100%" px="md" justify="space-between">
           <Group gap="sm">
             <Burger opened={opened} onClick={() => setOpened((o) => !o)} hiddenFrom="sm" size="sm" />
-            <Group gap={8}>
-              <ThemeIcon variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }} size="md" radius="md">
-                <IconPackages size={18} />
-              </ThemeIcon>
-              <div>
-                <Text fw={700} size="md" lh={1}>
-                  Camtrack
-                </Text>
-                <Text size="xs" c="dimmed" lh={1.2}>
-                  GPS tracker management
-                </Text>
-              </div>
-            </Group>
+            <img src="/logo.png" alt="Camtrack" style={{ height: 36, width: 'auto', objectFit: 'contain' }} />
           </Group>
 
-          <Menu shadow="md" width={200} position="bottom-end">
+          <Menu shadow="xl" width={220} position="bottom-end">
             <Menu.Target>
-              <UnstyledButton>
+              <UnstyledButton
+                style={{
+                  borderRadius: 8,
+                  padding: '6px 10px',
+                  transition: 'background 0.15s',
+                }}
+              >
                 <Group gap="xs">
-                  <Avatar color="indigo" radius="xl" size="sm">
+                  <Avatar
+                    color="indigo"
+                    radius="xl"
+                    size="md"
+                    style={{ fontWeight: 700 }}
+                  >
                     {user?.fullName?.charAt(0)?.toUpperCase() ?? '?'}
                   </Avatar>
                   <Stack gap={0} visibleFrom="xs">
-                    <Text size="sm" fw={500} lh={1.2}>
+                    <Text size="sm" fw={600} lh={1.3}>
                       {user?.fullName}
                     </Text>
                     <Text size="xs" c="dimmed" lh={1.2}>
-                      {user?.role === 'STOCK_MANAGER' ? 'Stock manager' : 'Technician'}
+                      {user?.role === 'STOCK_MANAGER' ? 'Stock Manager' : 'Technician'}
                     </Text>
                   </Stack>
-                  <IconChevronDown size={14} />
+                  <IconChevronDown size={14} stroke={1.8} />
                 </Group>
               </UnstyledButton>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Label>{user?.username}</Menu.Label>
-              <Menu.Item leftSection={<IconLogout size={14} />} color="red" onClick={handleLogout}>
+              <Menu.Label fw={600}>{user?.fullName}</Menu.Label>
+              <div style={{ padding: '0 12px 4px', marginTop: -4 }}>
+                <Text size="xs" c="dimmed">@{user?.username}</Text>
+              </div>
+              <Divider my="xs" />
+              <Menu.Item
+                leftSection={<IconLogout size={15} />}
+                color="red"
+                onClick={handleLogout}
+              >
                 Log out
               </Menu.Item>
             </Menu.Dropdown>
@@ -123,31 +137,79 @@ export function AppLayout({ children }: { children: ReactNode }) {
         </Group>
       </AppShell.Header>
 
-      <AppShell.Navbar p="sm">
+      {/* ── Navbar ─────────────────────────────────── */}
+      <AppShell.Navbar
+        p="sm"
+        style={{
+          background: 'var(--mantine-color-dark-8)',
+          borderRight: '1px solid var(--mantine-color-dark-5)',
+        }}
+      >
+        <AppShell.Section mb="xs">
+          <Stack gap={2} px={4} pt={4} pb={8}>
+            <Text size="xs" fw={600} c="dimmed" tt="uppercase" style={{ letterSpacing: '0.08em' }}>
+              Navigation
+            </Text>
+          </Stack>
+        </AppShell.Section>
+
         <AppShell.Section grow component={ScrollArea}>
-          <Stack gap={4}>
+          <Stack gap={3}>
             {items.map((item) => (
               <NavLink
                 key={item.to}
                 component={RouterNavLink}
                 to={item.to}
-                label={item.label}
-                leftSection={<item.icon size={18} stroke={1.6} />}
+                label={
+                  <Text size="sm" fw={500}>
+                    {item.label}
+                  </Text>
+                }
+                leftSection={<item.icon size={19} stroke={1.7} />}
                 onClick={() => setOpened(false)}
-                style={{ borderRadius: 8 }}
+                styles={{
+                  root: {
+                    borderRadius: 8,
+                    padding: '10px 12px',
+                  },
+                }}
               />
             ))}
           </Stack>
         </AppShell.Section>
+
         <AppShell.Section>
-          <Button variant="subtle" color="red" fullWidth leftSection={<IconLogout size={16} />} onClick={handleLogout}>
+          <Divider mb="sm" />
+          <Group gap="xs" px={4} mb="xs" wrap="nowrap">
+            <Avatar color="indigo" radius="xl" size="sm">
+              {user?.fullName?.charAt(0)?.toUpperCase() ?? '?'}
+            </Avatar>
+            <Stack gap={0} style={{ flex: 1, minWidth: 0 }}>
+              <Text size="sm" fw={600} truncate>
+                {user?.fullName}
+              </Text>
+              <Badge size="xs" variant="light" color={user?.role === 'STOCK_MANAGER' ? 'indigo' : 'teal'} radius="sm">
+                {user?.role === 'STOCK_MANAGER' ? 'Stock Manager' : 'Technician'}
+              </Badge>
+            </Stack>
+          </Group>
+          <Button
+            variant="subtle"
+            color="red"
+            fullWidth
+            size="sm"
+            leftSection={<IconLogout size={15} />}
+            onClick={handleLogout}
+            style={{ borderRadius: 8 }}
+          >
             Log out
           </Button>
         </AppShell.Section>
       </AppShell.Navbar>
 
+      {/* ── Main content ───────────────────────────── */}
       <AppShell.Main>
-        <div className="grid-pattern rounded-xl border border-white/5">{children}</div>
+        {children}
       </AppShell.Main>
     </AppShell>
   );

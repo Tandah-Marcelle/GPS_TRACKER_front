@@ -38,7 +38,7 @@ export default function Clients() {
   const [all, setAll] = useState<Client[]>([]);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
-  const [debouncedSearch] = useDebouncedValue(search, 350);
+  const debouncedSearch = useDebouncedValue(search, 350);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

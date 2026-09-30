@@ -11,7 +11,9 @@ import Register from './pages/Register';
 import Trackers from './pages/Trackers';
 import Clients from './pages/Clients';
 import Vehicles from './pages/Vehicles';
-import DashboardPlaceholder from './pages/DashboardPlaceholder';
+import Interventions from './pages/Interventions';
+import MyInterventions from './pages/MyInterventions';
+import Dashboard from './pages/Dashboard';
 
 function RoleRedirect() {
   const { user, isAuthenticated, loading } = useAuth();
@@ -54,7 +56,7 @@ export default function App() {
                 path="/dashboard"
                 element={
                   <Shell roles={['STOCK_MANAGER']}>
-                    <DashboardPlaceholder />
+                    <Dashboard />
                   </Shell>
                 }
               />
@@ -86,7 +88,7 @@ export default function App() {
                 path="/interventions"
                 element={
                   <Shell roles={['STOCK_MANAGER']}>
-                    <DashboardPlaceholder title="Interventions" />
+                    <Interventions />
                   </Shell>
                 }
               />
@@ -94,7 +96,7 @@ export default function App() {
                 path="/my-interventions"
                 element={
                   <Shell roles={['TECHNICIAN']}>
-                    <DashboardPlaceholder title="My interventions" />
+                    <MyInterventions />
                   </Shell>
                 }
               />

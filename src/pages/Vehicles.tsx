@@ -41,7 +41,7 @@ export default function Vehicles() {
   const [clients, setClients] = useState<Client[]>([]);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
-  const [debouncedSearch] = useDebouncedValue(search, 350);
+  const debouncedSearch = useDebouncedValue(search, 350);
   const [clientId, setClientId] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(true);
@@ -78,10 +78,10 @@ export default function Vehicles() {
   const needle = debouncedSearch.trim().toLowerCase();
   const filtered = needle
     ? all.filter((v) =>
-        [v.plate, v.brand, v.model, v.client?.name ?? ''].some((f) =>
-          f.toLowerCase().includes(needle),
-        ),
-      )
+      [v.plate, v.brand, v.model, v.client?.name ?? ''].some((f) =>
+        f.toLowerCase().includes(needle),
+      ),
+    )
     : all;
 
   useEffect(() => {

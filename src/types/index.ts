@@ -108,3 +108,28 @@ export interface VehiclePayload {
   brand: string;
   model: string;
 }
+
+export interface Intervention {
+  id: string;
+  clientId: string;
+  vehicleId: string;
+  technicianId: string;
+  scheduledAt: string;
+  address: string;
+  status: InterventionStatus;
+  trackerId: string | null;
+  completedAt: string | null;
+  createdAt: string;
+  client?: { id: string; name: string };
+  vehicle?: { id: string; plate: string; brand: string; model: string };
+  technician?: { id: string; fullName: string };
+  tracker?: { id: string; imei: string; simNumber: string } | null;
+}
+
+export interface InterventionPayload {
+  clientId: string;
+  vehicleId: string;
+  technicianId: string;
+  scheduledAt: string; // ISO format
+  address: string;
+}

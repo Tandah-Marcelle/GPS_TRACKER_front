@@ -49,7 +49,7 @@ export default function Trackers() {
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState<TrackerStatus | null>(null);
   const [search, setSearch] = useState('');
-  const [debouncedSearch] = useDebouncedValue(search, 350);
+  const debouncedSearch = useDebouncedValue(search, 350);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

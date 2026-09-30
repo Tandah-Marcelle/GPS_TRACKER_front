@@ -15,12 +15,18 @@
     "@mantine/hooks": "^9.6.3",
     "@mantine/modals": "^9.6.3",
     "@mantine/notifications": "^9.6.3",
+    "@radix-ui/react-label": "^2.1.15",
     "@tabler/icons-react": "^3.48.0",
     "@tailwindcss/vite": "^4.3.3",
     "axios": "^1.20.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cn": "^0.4.0",
+    "framer-motion": "^13.4.6",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.4",
+    "tailwind-merge": "^3.7.0",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {

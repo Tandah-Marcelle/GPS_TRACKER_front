@@ -5,7 +5,10 @@ import { ModalsProvider } from '@mantine/modals';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { AppLayout } from './components/AppLayout';
 import Login from './pages/Login';
+import Register from './pages/Register';
+import Trackers from './pages/Trackers';
 import DashboardPlaceholder from './pages/DashboardPlaceholder';
 
 function RoleRedirect() {
@@ -16,32 +19,84 @@ function RoleRedirect() {
   return <Navigate to="/dashboard" replace />;
 }
 
+function Unauthorized() {
+  const { user } = useAuth();
+  return (
+    <div style={{ padding: 40 }}>
+      <h2>403 — Forbidden</h2>
+      <p>Your role ({user?.role}) cannot access this page.</p>
+    </div>
+  );
+}
+
+/** Wraps a protected screen with the sidebar/topbar shell. */
+function Shell({ children, roles }: { children: React.ReactNode; roles?: ('STOCK_MANAGER' | 'TECHNICIAN')[] }) {
+  return (
+    <ProtectedRoute roles={roles}>
+      <AppLayout>{children}</AppLayout>
+    </ProtectedRoute>
+  );
+}
+
 export default function App() {
   return (
-    <MantineProvider>
+    <MantineProvider forceColorScheme="dark" defaultColorScheme="dark">
       <Notifications position="top-right" />
       <ModalsProvider>
         <BrowserRouter>
           <AuthProvider>
             <Routes>
               <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
               <Route
                 path="/dashboard"
                 element={
-                  <ProtectedRoute roles={['STOCK_MANAGER']}>
+                  <Shell roles={['STOCK_MANAGER']}>
                     <DashboardPlaceholder />
-                  </ProtectedRoute>
+                  </Shell>
+                }
+              />
+              <Route
+                path="/trackers"
+                element={
+                  <Shell roles={['STOCK_MANAGER']}>
+                    <Trackers />
+                  </Shell>
+                }
+              />
+              <Route
+                path="/clients"
+                element={
+                  <Shell roles={['STOCK_MANAGER']}>
+                    <DashboardPlaceholder title="Clients" />
+                  </Shell>
+                }
+              />
+              <Route
+                path="/vehicles"
+                element={
+                  <Shell roles={['STOCK_MANAGER']}>
+                    <DashboardPlaceholder title="Vehicles" />
+                  </Shell>
+                }
+              />
+              <Route
+                path="/interventions"
+                element={
+                  <Shell roles={['STOCK_MANAGER']}>
+                    <DashboardPlaceholder title="Interventions" />
+                  </Shell>
                 }
               />
               <Route
                 path="/my-interventions"
                 element={
-                  <ProtectedRoute roles={['TECHNICIAN']}>
-                    <DashboardPlaceholder />
-                  </ProtectedRoute>
+                  <Shell roles={['TECHNICIAN']}>
+                    <DashboardPlaceholder title="My interventions" />
+                  </Shell>
                 }
               />
-              <Route path="/unauthorized" element={<div style={{ padding: 40 }}>403 - Forbidden</div>} />
+              <Route path="/unauthorized" element={<Unauthorized />} />
               <Route path="/" element={<RoleRedirect />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

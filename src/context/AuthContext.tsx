@@ -6,7 +6,10 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   loading: boolean;
-  login: (username: string, password: string) => Promise<void>;
+  login: (identifier: string, password: string) => Promise<{ email: string; message: string; devOtp?: string }>;
+  verifyLoginOtp: (email: string, otp: string) => Promise<void>;
+  register: (data: { username: string; email: string; password: string; fullName: string; role?: string }) => Promise<{ email: string; devOtp?: string }>;
+  verifyOtp: (email: string, otp: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -44,8 +47,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     init();
   }, []);
 
-  const login = async (username: string, password: string) => {
-    const data = await authApi.login(username, password);
+  const login = async (identifier: string, password: string) => {
+    const data = await authApi.login(identifier, password);
+    // backend returns { message, email, devOtp? } - the JWT is only issued after OTP verification
+    return { email: data.email, message: data.message, devOtp: data.devOtp };
+  };
+
+  const verifyLoginOtp = async (email: string, otp: string) => {
+    const data = await authApi.verifyLoginOtp(email, otp);
+    localStorage.setItem('accessToken', data.accessToken);
+    localStorage.setItem('user', JSON.stringify(data.user));
+    setToken(data.accessToken);
+    setUser(data.user);
+  };
+
+  const register = async (data: { username: string; email: string; password: string; fullName: string; role?: string }) => {
+    const res = await authApi.register(data);
+    return { email: res.email, devOtp: res.devOtp };
+  };
+
+  const verifyOtp = async (email: string, otp: string) => {
+    const data = await authApi.verifyOtp(email, otp);
     localStorage.setItem('accessToken', data.accessToken);
     localStorage.setItem('user', JSON.stringify(data.user));
     setToken(data.accessToken);
@@ -60,7 +82,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, logout, isAuthenticated: !!user && !!token }}>
+    <AuthContext.Provider value={{ user, token, loading, login, verifyLoginOtp, register, verifyOtp, logout, isAuthenticated: !!user && !!token }}>
       {children}
     </AuthContext.Provider>
   );

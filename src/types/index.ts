@@ -74,3 +74,37 @@ export interface TrackerQuery {
   page?: number;
   limit?: number;
 }
+
+export interface Client {
+  id: string;
+  name: string;
+  phone: string;
+  address: string;
+  createdAt?: string;
+  _count?: { vehicles: number; interventions: number };
+}
+
+export interface Vehicle {
+  id: string;
+  clientId: string;
+  plate: string;
+  brand: string;
+  model: string;
+  createdAt?: string;
+  /** Included by the backend so the list can show the owner without a second request. */
+  client?: { id: string; name: string };
+  _count?: { trackers: number; interventions: number };
+}
+
+export interface ClientPayload {
+  name: string;
+  phone: string;
+  address: string;
+}
+
+export interface VehiclePayload {
+  clientId: string;
+  plate: string;
+  brand: string;
+  model: string;
+}

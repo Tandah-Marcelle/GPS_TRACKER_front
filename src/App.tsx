@@ -9,6 +9,8 @@ import { AppLayout } from './components/AppLayout';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Trackers from './pages/Trackers';
+import Clients from './pages/Clients';
+import Vehicles from './pages/Vehicles';
 import DashboardPlaceholder from './pages/DashboardPlaceholder';
 
 function RoleRedirect() {
@@ -68,7 +70,7 @@ export default function App() {
                 path="/clients"
                 element={
                   <Shell roles={['STOCK_MANAGER']}>
-                    <DashboardPlaceholder title="Clients" />
+                    <Clients />
                   </Shell>
                 }
               />
@@ -76,7 +78,7 @@ export default function App() {
                 path="/vehicles"
                 element={
                   <Shell roles={['STOCK_MANAGER']}>
-                    <DashboardPlaceholder title="Vehicles" />
+                    <Vehicles />
                   </Shell>
                 }
               />

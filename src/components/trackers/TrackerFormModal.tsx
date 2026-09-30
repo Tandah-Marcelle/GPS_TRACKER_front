@@ -81,7 +81,7 @@ export function TrackerFormModal({ opened, onClose, tracker, onSaved }: Props) {
       onSaved();
       onClose();
     } catch (err) {
-      const fieldErrors = serverFieldErrors(err);
+      const fieldErrors = serverFieldErrors(err, ['imei', 'model', 'simNumber', 'status']);
       if (Object.keys(fieldErrors).length) form.setErrors(fieldErrors);
       else setServerError(serverMessage(err, 'Could not save the tracker'));
     } finally {
